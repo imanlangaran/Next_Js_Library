@@ -1,5 +1,6 @@
 'use client';
 
+import { toast } from "@/hooks/use-toast";
 import config from "@/lib/config";
 import { IKImage, ImageKitProvider, IKUpload } from "imagekitio-next";
 import Image from "next/image";
@@ -30,10 +31,19 @@ const ImageUpload = ({ onFileChange }: { onFileChange: (FilePath: string) => voi
 
   const onError = (error: any) => {
     console.log(error)
+    toast({
+      title: "Image upload failed",
+      description: "Your image could not be uploaded. please try again.", variant: "destructive"
+    })
   }
   const onSuccess = (res: any) => {
     setFile(res);
     onFileChange(res.filePath);
+
+    toast({
+      title: "Image uploaded successfully",
+      description: `${res.filePath} uploaded successfully`,
+    })
   }
 
   return <ImageKitProvider publicKey={publicKey} urlEndpoint={urlEndpoint} authenticator={authenticator}>
@@ -41,7 +51,7 @@ const ImageUpload = ({ onFileChange }: { onFileChange: (FilePath: string) => voi
       className="hidden" ref={ikUploadRef} onError={onError} onSuccess={onSuccess} fileName="test-upload.png"
     />
 
-    <button className="upload-btn" onClick={(e) => {
+    <button className="upload-btn bg-dark-300" onClick={(e) => {
       e.preventDefault();
 
       if (ikUploadRef.current) {
@@ -65,7 +75,7 @@ const ImageUpload = ({ onFileChange }: { onFileChange: (FilePath: string) => voi
         alt={file.filePath}
         path={file.filePath}
         width={500}
-        height={500}
+        height={300}
       />
     )}
   </ImageKitProvider>
