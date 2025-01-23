@@ -5,11 +5,10 @@ import config from "@/lib/config";
 import { IKImage, ImageKitProvider, IKUpload } from "imagekitio-next";
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { FilePath } from "tailwindcss/types/config";
 
 const authenticator = async () => {
   try {
-    const response = await fetch(`${config.env.apiEndpoint}/auth`);
+    const response = await fetch(`${config.env.apiEndpoint}/api/auth/imagekit`);
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(`Request failed with status ${response.status}: ${errorText}`);
