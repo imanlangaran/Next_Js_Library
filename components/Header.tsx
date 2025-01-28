@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Session } from "next-auth";
 
 
@@ -37,7 +37,8 @@ const Header = ({ session }: { session: Session }) => {
               <AvatarFallback className="bg-amber-100">
                 {getInitial(session?.user?.name || "OO")}
               </AvatarFallback>
-            </Avatar></Link>
+            </Avatar>
+          </Link>
         </li>
       </ul>
     </header>
