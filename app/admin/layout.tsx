@@ -4,6 +4,7 @@ import React, { ReactNode } from 'react'
 
 import "@/styles/admin.css";
 import SideBar from '@/components/admin/SideBar';
+import Header from '@/components/admin/Header';
 
 const Layout = async ({ children }: { children: ReactNode }) => {
 
@@ -15,7 +16,7 @@ const Layout = async ({ children }: { children: ReactNode }) => {
       <SideBar session={session} />
 
       <div className='admin-container'>
-        <p>Header</p>
+        <Header session={session} />
         {children}
       </div>
     </main>
