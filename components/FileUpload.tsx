@@ -30,7 +30,8 @@ interface Props {
   placeholder: string,
   folder: string,
   varient: "dark" | "light",
-  onFileChange: (FilePath: string) => void
+  onFileChange: (FilePath: string) => void,
+  value?: string
 }
 
 const FileUpload = ({
@@ -39,10 +40,12 @@ const FileUpload = ({
   placeholder,
   folder,
   varient,
-  onFileChange }: Props) => {
+  onFileChange,
+  value
+}: Props) => {
 
   const ikUploadRef = useRef(null);
-  const [file, setFile] = useState<{ filePath: string } | null>(null);
+  const [file, setFile] = useState<{ filePath: string | null }>({ filePath: value ?? null });
   const [progress, setProgress] = useState(0);
   const style = {
     botton: varient === "dark" ? "bg-dark-300" : "bg-light-600 border-gray-100 border",
@@ -117,10 +120,10 @@ const FileUpload = ({
         height={20}
         className="object-contain" />
 
-      <p className={cn("text-base", style.botton)}>{placeholder} </p>
+      <p className={cn("text-base", style.text)}>{placeholder} </p>
 
       {file && <p className={cn("upload-filename", style.text)}>{file.filePath}</p>}
-      
+
     </button>
 
     {progress > 0 && progress != 100 && (

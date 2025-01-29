@@ -19,6 +19,8 @@ import { useRouter } from "next/navigation";
 import { bookSchema } from "@/lib/validations";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import FileUpload from "@/components/FileUpload";
+import ColorPicker from "../ColorPicker";
 
 
 interface Props extends Partial<Book> {
@@ -41,7 +43,7 @@ const BookForm = ({
       rating: 1,
       totalCopies: 1,
       coverUrl: "",
-      conerColor: "",
+      coverColor: "",
       videoUrl: "",
       summery: "",
     },
@@ -137,7 +139,30 @@ const BookForm = ({
                 Book Image
               </FormLabel>
               <FormControl>
-                {/* file upload */}
+                <FileUpload
+                  type="image"
+                  accept="image/*"
+                  placeholder="Upload a Book Cover"
+                  folder="books/covers"
+                  varient="light"
+                  onFileChange={field.onChange}
+                  value={field.value}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name={'coverUrl'}
+          render={({ field }) => (
+            <FormItem className="flex flex-col gap-1">
+              <FormLabel className="text-base font-normal text-dark-500">
+                Primary Color
+              </FormLabel>
+              <FormControl>
+                <ColorPicker value={field.value} onPickerChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -173,7 +198,15 @@ const BookForm = ({
                 Book Trailer
               </FormLabel>
               <FormControl>
-                {/* file upload */}
+                <FileUpload
+                  type="video"
+                  accept="video/*"
+                  placeholder="Upload a Book Trailer"
+                  folder="books/videos"
+                  varient="light"
+                  onFileChange={field.onChange}
+                  value={field.value}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
