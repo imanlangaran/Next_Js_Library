@@ -24,5 +24,5 @@ export const bookSchema = z.object({
   coverUrl: z.string().nonempty(),
   coverColor: z.string().trim().regex(/^#[0-9A-F]{6}$/i),
   videoUrl: z.string().nonempty(),
-  summery: z.string().trim().min(10),
+  summary: z.string().trim().min(10),
 })

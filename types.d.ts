@@ -32,5 +32,5 @@ interface BookParams {
   description: string,
   totalCopies: number,
   videoUrl: string,
-  summery: string
+  summary: string
 }

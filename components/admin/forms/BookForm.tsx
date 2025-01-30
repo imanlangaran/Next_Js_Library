@@ -20,13 +20,13 @@ import { bookSchema } from "@/lib/validations";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import FileUpload from "@/components/FileUpload";
-import ColorPicker from "../ColorPicker";
+import ColorPicker from "@/components/admin/ColorPicker";
 import { createBook } from "@/lib/admin/actions/book";
 import { toast } from "@/hooks/use-toast";
 
 
 interface Props extends Partial<Book> {
-  type?: "create" | "update"
+  type?: "create" | "update";
 }
 
 const BookForm = ({
@@ -47,7 +47,7 @@ const BookForm = ({
       coverUrl: "",
       coverColor: "",
       videoUrl: "",
-      summery: "",
+      summary: "",
     },
   });
 
@@ -60,13 +60,13 @@ const BookForm = ({
         description: "Book created successfully",
       });
 
-      router.push(`/admin/books/${result.data.id}`)
+      router.push(`/admin/books/${result.data.id}`);
     } else {
       toast({
         title: "Error",
         description: result.message,
-        variant: "destructive"
-      })
+        variant: "destructive",
+      });
     }
   };
 
@@ -163,7 +163,7 @@ const BookForm = ({
                   accept="image/*"
                   placeholder="Upload a Book Cover"
                   folder="books/covers"
-                  varient="light"
+                  variant="light"
                   onFileChange={field.onChange}
                   value={field.value}
                 />
@@ -174,7 +174,7 @@ const BookForm = ({
         />
         <FormField
           control={form.control}
-          name={'coverUrl'}
+          name={"coverColor"}
           render={({ field }) => (
             <FormItem className="flex flex-col gap-1">
               <FormLabel className="text-base font-normal text-dark-500">
@@ -222,7 +222,7 @@ const BookForm = ({
                   accept="video/*"
                   placeholder="Upload a Book Trailer"
                   folder="books/videos"
-                  varient="light"
+                  variant="light"
                   onFileChange={field.onChange}
                   value={field.value}
                 />
@@ -234,15 +234,15 @@ const BookForm = ({
 
         <FormField
           control={form.control}
-          name={'summery'}
+          name={"summary"}
           render={({ field }) => (
             <FormItem className="flex flex-col gap-1">
               <FormLabel className="text-base font-normal text-dark-500">
-                Book Summery
+                Book Summary
               </FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Book Summery"
+                  placeholder="Book summary"
                   {...field}
                   rows={5}
                   className="book-form_input"

@@ -29,7 +29,7 @@ interface Props {
   accept: string,
   placeholder: string,
   folder: string,
-  varient: "dark" | "light",
+  variant: "dark" | "light",
   onFileChange: (FilePath: string) => void,
   value?: string
 }
@@ -39,18 +39,18 @@ const FileUpload = ({
   accept,
   placeholder,
   folder,
-  varient,
+  variant,
   onFileChange,
   value
 }: Props) => {
 
   const ikUploadRef = useRef(null);
-  const [file, setFile] = useState<{ filePath: string | null }>({ filePath: value ?? null });
+  const [file, setFile] = useState<{ filePath: string | "" }>({ filePath: value ?? "" });
   const [progress, setProgress] = useState(0);
   const style = {
-    botton: varient === "dark" ? "bg-dark-300" : "bg-light-600 border-gray-100 border",
-    placeholder: varient === "dark" ? "text-light-100" : "text-dark-500",
-    text: varient === "dark" ? "text-light-100" : "text-dark-400",
+    botton: variant === "dark" ? "bg-dark-300" : "bg-light-600 border-gray-100 border",
+    placeholder: variant === "dark" ? "text-light-100" : "text-dark-500",
+    text: variant === "dark" ? "text-light-100" : "text-dark-400",
   }
 
   const onError = (error: any) => {
