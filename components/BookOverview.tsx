@@ -12,8 +12,8 @@ const BookOverview = ({
   availableCopies,
   description,
   coverColor,
-  coverUrl,
-}: Book) => {
+  coverUrl
+}: Book, userId: string) => {
   return (
     <section className="book-overview">
       <div className="flex flex-1 flex-col gap-5">
