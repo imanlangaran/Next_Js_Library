@@ -34,7 +34,7 @@ export const books = pgTable("books", {
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 })
 
-export const borrowRecord = pgTable("borrow_records",{
+export const borrowRecords = pgTable("borrow_records",{
   id: uuid("id").notNull().primaryKey().defaultRandom().unique(),
   userId: uuid("user_id").references(() => users.id).notNull(),
   bookId: uuid("book_id").references(()=>books.id).notNull(),

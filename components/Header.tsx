@@ -7,6 +7,8 @@ import { usePathname } from "next/navigation";
 import React from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Session } from "next-auth";
+import { Button } from "./ui/button";
+import { signOut } from "@/auth";
 
 
 
@@ -19,7 +21,7 @@ const Header = ({ session }: { session: Session }) => {
         <Image src="/icons/logo.svg" alt="logo" width={40} height={40}></Image>
       </Link>
       <ul className="flex flex-row items-center gap-8">
-        <li>
+        {/* <li>
           <Link
             href="/library"
             className={cn(
@@ -29,7 +31,7 @@ const Header = ({ session }: { session: Session }) => {
           >
             Library
           </Link>
-        </li>
+        </li> */}
 
         <li>
           <Link href="/my-profile">
@@ -39,6 +41,16 @@ const Header = ({ session }: { session: Session }) => {
               </AvatarFallback>
             </Avatar>
           </Link>
+
+          {/* <form
+            action={async () => {
+              "use server";
+              await signOut();
+            }}
+            className='mb-10'
+          >
+            <Button>Log out</Button>
+          </form> */}
         </li>
       </ul>
     </header>
