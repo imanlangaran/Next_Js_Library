@@ -201,4 +201,12 @@
   .user-card .email {
     @apply text-light-500 text-sm line-clamp-1 break-words w-full;
   }
+
+  .admin-main {
+    @apply w-full rounded-2xl bg-white;
+  }
+
+  .admin-main h2 {
+    @apply text-2xl font-semibold text-dark-400;
+  }
 }
