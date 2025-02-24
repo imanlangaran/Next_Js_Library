@@ -1,4 +1,5 @@
-import UsersTable from '@/components/admin/UsersTable';
+import Table from '@/components/admin/Table';
+import { AllUsersColumns } from '@/constants/columns';
 import { db } from '@/database/drizzle'
 import { users } from '@/database/schema'
 import React from 'react'
@@ -10,12 +11,7 @@ const AllUsers = async () => {
 
   return (
     <section className='admin-main p-7'>
-      <div className='flex justify-between items-center'>
-        <h2>All Users</h2>
-        <button className='btn-primary'>A-Z</button>
-      </div>
-
-      <UsersTable />
+       <Table title="All Users" columns={AllUsersColumns} data={AllUsers}/>
 
 
     </section>
