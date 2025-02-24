@@ -1,5 +1,5 @@
-import Table from '@/components/admin/Table';
-import { AllUsersColumns } from '@/constants/columns';
+import Table from '@/components/admin/TheTable';
+import { AllUsersColumns } from '@/components/admin/columns';
 import { db } from '@/database/drizzle'
 import { users } from '@/database/schema'
 import React from 'react'

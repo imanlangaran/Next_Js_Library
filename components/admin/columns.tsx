@@ -1,10 +1,14 @@
-import { ColumnDef } from "@tanstack/react-table"
+"use client";
 
+import { ColumnDef } from "@tanstack/react-table";
 
 export const AllUsersColumns: ColumnDef<User>[] = [
   {
     accessorKey: "email",
-    header: "Email"
+    header: () => <div className="text-center">Email</div>,
+    cell: ({ row }) => (
+      <div className="text-center text-blue-100">{row.getValue("email")}</div>
+    ),
   },
   {
     accessorKey: "joinedDate",
@@ -30,4 +34,4 @@ export const AllUsersColumns: ColumnDef<User>[] = [
     accessorKey: "actions",
     header: "Action",
   },
-]
+];
