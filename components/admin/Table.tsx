@@ -1,13 +1,13 @@
 import { ColumnDef } from '@tanstack/react-table'
 import React from 'react'
 
-interface Props {
+interface Props<TData, TValue> {
   title: string,
-  columns: ColumnDef<User>[],
-  data: User[],
+  columns: ColumnDef<TData, TValue>[],
+  data: TData[],
 }
 
-const Table = ({ title, columns, data} : Props) => {
+const Table = <TData, TValue>({ title, columns, data} : Props<TData, TValue>) => {
   return (
     <div className='flex justify-between items-center'>
       <h2>{title}</h2>
