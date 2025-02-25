@@ -24,9 +24,9 @@ const getAllUsers = async () => {
     .select({
       email: users.email,
       fullName: users.fullName,
-      joinedDate: users.createdAt,
+      joinedDate: sql<string>`to_char(${users.createdAt}, 'Mon DD YYYY')`,
       role: users.role,
-      borrowedBooks: sql`2`,
+      borrowedBooks: sql<number>`2`,
       universityIdNo: users.universityId,
       universityIdCard: users.universityCard,
     })

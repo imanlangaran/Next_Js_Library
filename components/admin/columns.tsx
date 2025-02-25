@@ -2,6 +2,8 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import UserWAvatar from "./UserWAvatar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { Button } from "../ui/button";
 
 export const AllUsersColumns: ColumnDef<User>[] = [
   {
@@ -23,6 +25,21 @@ export const AllUsersColumns: ColumnDef<User>[] = [
   {
     accessorKey: "role",
     header: "Role",
+    cell: ({row}) => (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant='secondary'>{row.getValue("role")}</Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="">
+          <DropdownMenuRadioGroup value={row.getValue("role")}>
+            <DropdownMenuRadioItem value="ADMIN">ADMIN</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="USER">USER</DropdownMenuRadioItem>
+          </DropdownMenuRadioGroup>
+          {/* <DropdownMenuLabel>ADMIN</DropdownMenuLabel>
+          <DropdownMenuLabel>USER</DropdownMenuLabel> */}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    )
   },
   {
     accessorKey: "borrowedBooks",
