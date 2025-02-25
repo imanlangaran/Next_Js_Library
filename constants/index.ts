@@ -110,3 +110,10 @@ export const borrowStatuses = [
     textColor: "text-[#026AA2]",
   },
 ];
+
+export const DropDownOptions = {
+  user_role:{
+    "ADMIN": "bg-green-200",
+    "USER":"bg-red-200",
+  }
+}
