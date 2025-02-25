@@ -2,6 +2,7 @@ import Table from '@/components/admin/TheTable';
 import { AllUsersColumns } from '@/components/admin/columns';
 import { db } from '@/database/drizzle'
 import { users } from '@/database/schema'
+import { sql } from 'drizzle-orm';
 import React from 'react'
 
 const AllUsers = async () => {
@@ -19,10 +20,20 @@ const AllUsers = async () => {
 }
 
 const getAllUsers = async () => {
-  return await db
-    .select()
+  const allUsers = await db
+    .select({
+      email: users.email,
+      fullName: users.fullName,
+      joinedDate: users.createdAt,
+      role: users.role,
+      borrowedBooks: sql`2`,
+      universityIdNo: users.universityId,
+      universityIdCard: users.universityCard,
+    })
     .from(users)
     .orderBy(users.createdAt);
+
+  return allUsers;
 }
 
 export default AllUsers

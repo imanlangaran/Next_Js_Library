@@ -1,13 +1,19 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
+import UserWAvatar from "./UserWAvatar";
 
 export const AllUsersColumns: ColumnDef<User>[] = [
   {
     accessorKey: "email",
-    header: () => <div className="text-center">Email</div>,
+    header: "Name",
     cell: ({ row }) => (
-      <div className="text-center text-blue-100">{row.getValue("email")}</div>
+      // console.log(row.constructor.name)
+      // console.log(row)
+      <UserWAvatar 
+      name={row.original["fullName"]}
+      email={row.getValue("email")}/>
+      
     ),
   },
   {

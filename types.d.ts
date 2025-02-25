@@ -23,29 +23,30 @@ interface AuthCredentials {
 }
 
 interface BookParams {
-  title: string,
-  author: string,
-  genre: string,
-  rating: number,
-  coverUrl: string,
-  coverColor: string,
-  description: string,
-  totalCopies: number,
-  videoUrl: string,
-  summary: string
+  title: string;
+  author: string;
+  genre: string;
+  rating: number;
+  coverUrl: string;
+  coverColor: string;
+  description: string;
+  totalCopies: number;
+  videoUrl: string;
+  summary: string;
 }
 
-interface BorrowBookParams{
+interface BorrowBookParams {
   bookId: string;
   userId: string;
 }
 
-interface User{
-  id:string,
-  email: string,
-  joinedDate : string,
-  role: "USER" | "ADMIN",
-  borrowedBooks: number,
-  universityIdNo : number,
-  universityIdCard : string,
+interface User {
+  id: string;
+  fullName: string;
+  email: string;
+  joinedDate: string;
+  role: "USER" | "ADMIN";
+  borrowedBooks: number;
+  universityIdNo: number;
+  universityIdCard: string;
 }

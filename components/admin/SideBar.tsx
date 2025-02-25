@@ -8,6 +8,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
+import UserWAvatar from './UserWAvatar';
 
 const SideBar = ({ session }: { session: Session }) => {
 
@@ -45,7 +46,8 @@ const SideBar = ({ session }: { session: Session }) => {
         </div>
 
       </div>
-      <div className='user'>
+      
+      {/* <div className='user'>
         <Avatar>
           <AvatarFallback className="bg-amber-100">
             {getInitial(session?.user?.name || "OO")}
@@ -56,7 +58,10 @@ const SideBar = ({ session }: { session: Session }) => {
           <p className='font-semibold text-dark-200'>{session?.user?.name}</p>
           <p className='text-light-500 text-xs'>{session?.user?.email}</p>
         </div>
-      </div>
+      </div> */}
+      <UserWAvatar 
+      name={session?.user?.name || null} 
+      email={session?.user?.email || null} />
     </div>
   )
 }

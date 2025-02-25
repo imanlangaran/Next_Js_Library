@@ -34,7 +34,7 @@ const TheTable = <TData, TValue>({
   });
 
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <div className="flex justify-between items-center">
         <h2>{title}</h2>
         <button className="btn-primary">A-Z</button>
@@ -45,7 +45,7 @@ const TheTable = <TData, TValue>({
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id} className="text-nowrap text-center">
                     {flexRender(
                       header.column.columnDef.header,
                       header.getContext()
@@ -60,10 +60,12 @@ const TheTable = <TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  // data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell 
+                    key={cell.id}
+                    className="text-nowrap text-center">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -80,7 +82,7 @@ const TheTable = <TData, TValue>({
           </TableBody>
         </Table>
       </div>
-    </>
+    </div>
   );
 };
 
