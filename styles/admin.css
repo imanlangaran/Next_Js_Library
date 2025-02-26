@@ -190,7 +190,7 @@
   }
 
   .user {
-    @apply flex w-full flex-row gap-2 px-2 py-2 max-md:px-2;
+    @apply flex w-min flex-row gap-2 px-2 py-2 max-md:px-2;
   }
 
   /* User Card */

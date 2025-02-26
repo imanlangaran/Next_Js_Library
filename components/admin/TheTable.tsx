@@ -41,11 +41,11 @@ const TheTable = <TData, TValue>({
       </div>
       <div className="rounded-md border">
         <Table>
-          <TableHeader>
+          <TableHeader >
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="text-nowrap text-center">
+                  <TableHead key={header.id} className="whitespace-nowrap text-center w-fit">
                     {flexRender(
                       header.column.columnDef.header,
                       header.getContext()
@@ -65,11 +65,13 @@ const TheTable = <TData, TValue>({
                   {row.getVisibleCells().map((cell) => (
                     <TableCell 
                     key={cell.id}
-                    className="text-nowrap text-center">
+                    className="whitespace-nowrap text-center w-fit">
+                      <div className="flex items-center justify-center">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
                       )}
+                      </div>
                     </TableCell>
                   ))}
                 </TableRow>

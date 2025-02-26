@@ -1,4 +1,4 @@
-import Table from '@/components/admin/TheTable';
+import TheTable from '@/components/admin/TheTable';
 import { AllUsersColumns } from '@/components/admin/columns';
 import { db } from '@/database/drizzle'
 import { users } from '@/database/schema'
@@ -12,7 +12,7 @@ const AllUsers = async () => {
 
   return (
     <section className='admin-main p-7'>
-       <Table title="All Users" columns={AllUsersColumns} data={AllUsers}/>
+       <TheTable title="All Users" columns={AllUsersColumns} data={AllUsers}/>
 
 
     </section>
