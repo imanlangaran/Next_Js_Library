@@ -99,7 +99,7 @@ const AuthForm = <T extends FieldValues>({
                         accept="image/*"
                         placeholder="Upload your university ID"
                         folder="ids"
-                        varient="dark"
+                        variant="dark"
                         onFileChange={field.onChange}
                       /> :
                       <Input required type={FIELD_TYPES[field.name as keyof typeof FIELD_TYPES]} {...field} className="form-input" />}
