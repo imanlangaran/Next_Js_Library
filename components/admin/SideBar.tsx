@@ -61,7 +61,8 @@ const SideBar = ({ session }: { session: Session }) => {
       </div> */}
       <UserWAvatar 
       name={session?.user?.name || null} 
-      email={session?.user?.email || null} />
+      email={session?.user?.email || null} 
+      hideNameInMD/>
     </div>
   )
 }
