@@ -27,6 +27,7 @@ export const changeUserRole = async (params: ChangeUserRoleParams) => {
       role: users.role,
       borrowedBooks: sql<number>`2`,
       universityIdNo: users.universityId,
+      universityIdCard: users.universityCard,
     }).from(users).where(eq(users.id, userId)).limit(1);
 
     return {

@@ -30,6 +30,10 @@ import { useState } from "react";
 import GridLoader from "react-spinners/GridLoader";
 import { changeUserRole } from "@/lib/admin/actions/user";
 
+type TableMeta = {
+  updateData: (user: User) => void;
+}
+
 export const AllUsersColumns: ColumnDef<User>[] = [
   {
     accessorKey: "email",
@@ -59,7 +63,7 @@ export const AllUsersColumns: ColumnDef<User>[] = [
 
         if (result.success && result.user) {
           // Update table data with new user info
-          table.options.meta?.updateData(result.user);
+          (table.options.meta as TableMeta)?.updateData(result.user);
         }
       };
       return (
@@ -79,7 +83,7 @@ export const AllUsersColumns: ColumnDef<User>[] = [
             <DropdownMenuRadioGroup
               value={row.getValue("role")}
               onValueChange={async (value: string) => {
-                await handleRoleChange(value);
+                await handleRoleChange(value as "ADMIN" | "USER");
               }}
             >
               <DropdownMenuRadioItem value="ADMIN">
