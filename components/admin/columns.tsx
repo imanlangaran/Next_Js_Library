@@ -50,50 +50,65 @@ export const AllUsersColumns: ColumnDef<User>[] = [
   {
     accessorKey: "role",
     header: "Role",
-    cell: ({ row }) => (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          {/* <Button variant='secondary'>{row.getValue("role")}</Button> */}
-          <div
-            className={`px-3 py-2 rounded-full w-min cursor-pointer ${
-              row.getValue("role") === "USER" ? "bg-red-200" : "bg-green-200"
-            }`}
-          >
-            {row.getValue("role")}
-          </div>
-          {/* <DDOption color={DropDownOptions.user_role[row.getValue('role')]} name={row.getValue('role')}/> */}
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuRadioGroup value={row.getValue("role")}
-          onValueChange={async (value: string) => {
-            await changeUserRole({userId: row.original.id, role: value as "ADMIN" | "USER"});
-          }}>
-            <DropdownMenuRadioItem value="ADMIN">
-              <div
-                className={cn(
-                  "px-3 py-2 rounded-full w-min cursor-context-menu ",
-                  DropDownOptions.user_role.ADMIN
-                )}
-              >
-                ADMIN
-              </div>
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="USER">
-              <div
-                className={cn(
-                  "px-3 py-2 rounded-full w-min cursor-context-menu ",
-                  DropDownOptions.user_role.USER
-                )}
-              >
-                USER
-              </div>
-            </DropdownMenuRadioItem>
-          </DropdownMenuRadioGroup>
-          {/* <DropdownMenuLabel>ADMIN</DropdownMenuLabel>
-          <DropdownMenuLabel>USER</DropdownMenuLabel> */}
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ),
+    cell: ({ row, table }) => {
+      const handleRoleChange = async (newRole: "ADMIN" | "USER") => {
+        const result = await changeUserRole({
+          userId: row.original.id,
+          role: newRole,
+        });
+
+        if (result.success && result.user) {
+          // Update table data with new user info
+          table.options.meta?.updateData(result.user);
+        }
+      };
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            {/* <Button variant='secondary'>{row.getValue("role")}</Button> */}
+            <div
+              className={`px-3 py-2 rounded-full w-min cursor-pointer ${
+                row.getValue("role") === "USER" ? "bg-red-200" : "bg-green-200"
+              }`}
+            >
+              {row.getValue("role")}
+            </div>
+            {/* <DDOption color={DropDownOptions.user_role[row.getValue('role')]} name={row.getValue('role')}/> */}
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuRadioGroup
+              value={row.getValue("role")}
+              onValueChange={async (value: string) => {
+                await handleRoleChange(value);
+              }}
+            >
+              <DropdownMenuRadioItem value="ADMIN">
+                <div
+                  className={cn(
+                    "px-3 py-2 rounded-full w-min cursor-context-menu ",
+                    DropDownOptions.user_role.ADMIN
+                  )}
+                >
+                  ADMIN
+                </div>
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="USER">
+                <div
+                  className={cn(
+                    "px-3 py-2 rounded-full w-min cursor-context-menu ",
+                    DropDownOptions.user_role.USER
+                  )}
+                >
+                  USER
+                </div>
+              </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+            {/* <DropdownMenuLabel>ADMIN</DropdownMenuLabel>
+            <DropdownMenuLabel>USER</DropdownMenuLabel> */}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
   },
   {
     accessorKey: "borrowedBooks",

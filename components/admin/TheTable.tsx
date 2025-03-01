@@ -6,7 +6,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import React from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -16,21 +16,34 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-interface Props<TData, TValue> {
+interface Props<TData extends { id: string | number }, TValue> {
   title: string;
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  onDataChange?: (updatedRow: TData) => void;
 }
 
-const TheTable = <TData, TValue>({
+const TheTable = <TData extends { id: string | number }, TValue>({
   title,
   columns,
-  data,
+  data: initialData,
+  onDataChange,
 }: Props<TData, TValue>) => {
+  const [data, setData] = useState(initialData);
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    meta: {
+      updateData: (updatedRow: TData) => {
+        setData((prev) =>
+          prev.map((row) => (row.id === updatedRow.id ? updatedRow : row))
+        );
+        // Propagate changes up if needed
+        onDataChange?.(updatedRow);
+      },
+    },
   });
 
   return (

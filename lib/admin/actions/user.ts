@@ -18,15 +18,27 @@ export const changeUserRole = async (params: ChangeUserRoleParams) => {
       .set({ role })
       .where(eq(users.id, userId));
 
+    // Get the updated user data
+    const updatedUser = await db.select({
+      id: users.id,
+      email: users.email,
+      fullName: users.fullName,
+      joinedDate: sql<string>`to_char(${users.createdAt}, 'Mon DD YYYY')`,
+      role: users.role,
+      borrowedBooks: sql<number>`2`,
+      universityIdNo: users.universityId,
+    }).from(users).where(eq(users.id, userId)).limit(1);
+
     return {
       success: true,
+      user: updatedUser[0]
     };
   } catch (error) {
     console.log(error);
 
     return {
       success: false,
-      error: "An error occured while changing the role",
+      error: "An error occurred while changing the role"
     };
   }
 }
