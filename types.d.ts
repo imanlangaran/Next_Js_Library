@@ -50,3 +50,7 @@ interface User {
   universityIdNo: number;
   universityIdCard: string;
 }
+
+interface AccountRequest extends User {
+  status: "PENDING" | "APPROVED" | "REJECTED";
+}
