@@ -2,7 +2,7 @@
 
 import { db } from "@/database/drizzle";
 import { users } from "@/database/schema";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 interface ChangeUserRoleParams {
   userId: string;
@@ -30,3 +30,22 @@ export const changeUserRole = async (params: ChangeUserRoleParams) => {
     };
   }
 }
+
+
+export const getAllUsers = async () => {
+  const allUsers = await db
+    .select({
+      id: users.id,
+      email: users.email,
+      fullName: users.fullName,
+      joinedDate: sql<string>`to_char(${users.createdAt}, 'Mon DD YYYY')`,
+      role: users.role,
+      borrowedBooks: sql<number>`2`,
+      universityIdNo: users.universityId,
+      universityIdCard: users.universityCard,
+    })
+    .from(users)
+    .orderBy(users.createdAt);
+
+  return allUsers;
+};
