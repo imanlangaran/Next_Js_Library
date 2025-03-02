@@ -176,12 +176,15 @@ export const AllUsersColumns: ColumnDef<User>[] = [
     accessorKey: "actions",
     header: "Action",
     cell: ({ row }) => (
-      <ActionDialog fullName={row.original.fullName} varient="red">
+      <ActionDialog fullName={row.original.fullName} varient="red" onConfirm={(e) => {console.log()}}>
         <Trash2 width={20} height={20} />
       </ActionDialog>
     ),
   },
 ];
+
+
+
 
 export const AccountRequestsColumns: ColumnDef<AccountRequest>[] = [
   {
@@ -250,24 +253,133 @@ export const AccountRequestsColumns: ColumnDef<AccountRequest>[] = [
     accessorKey: "actions",
     header: "Actions",
     cell: ({ row }) => {
-      const handleAction = async (e) => {
-        console.log(e.target.value)
+      interface ActionEvent extends React.MouseEvent<HTMLButtonElement> {
+        target: HTMLButtonElement;
       }
-      
+
+      const handleAction = async (e: ActionEvent): Promise<void> => {
+        console.log(e.target.value);
+      };
+
       return (
-      <div className="flex gap-4 items-center">
-        <ActionDialog fullName={row.original.fullName} varient="green"
-        onConfirm={handleAction}>
-          <Button className="bg-green-200 text-green-900 hover:bg-green-200/80 ">
-            Approve
-          </Button>
-        </ActionDialog>
-        <ActionDialog fullName={row.original.fullName} varient="red"
-        onConfirm={handleAction}>
-          <CirclePlus width={20} height={20} className="rotate-45" />
-        </ActionDialog>
-      </div>
-      )
+        <div className="flex gap-4 items-center">
+          <ActionDialog
+            fullName={row.original.fullName}
+            varient="green"
+            onConfirm={handleAction}
+          >
+            <Button className="bg-green-200 text-green-900 hover:bg-green-200/80 ">
+              Approve
+            </Button>
+          </ActionDialog>
+          <ActionDialog
+            fullName={row.original.fullName}
+            varient="red"
+            onConfirm={handleAction}
+          >
+            <CirclePlus width={20} height={20} className="rotate-45" />
+          </ActionDialog>
+        </div>
+      );
+    },
+  },
+];
+
+export const AccountRequestsColumns2: ColumnDef<AccountRequest>[] = [
+  {
+    accessorKey: "email",
+    header: "Name",
+    cell: ({ row }) => (
+      <UserWAvatar
+        name={row.original["fullName"]}
+        email={row.getValue("email")}
+      />
+    ),
+  },
+  {
+    accessorKey: "joinedDate",
+    header: "Joined Date",
+  },
+
+  {
+    accessorKey: "universityIdNo",
+    header: "University ID No",
+  },
+  {
+    accessorKey: "universityIdCard",
+    header: "University ID Card",
+    cell: ({ row }) => {
+      const [loading, setLoading] = useState(false);
+      return (
+        <Dialog>
+          <DialogTrigger>
+            <div className="text-blue-500 hover:text-blue-700 flex items-center">
+              <Eye width={14} height={14} className="mr-1" />
+              View ID Card
+            </div>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-md min-h-[350] flex flex-col items-center justify-stretch">
+            <DialogTitle className="w-full">ID Card</DialogTitle>
+            <div className="flex-grow w-full flex items-center justify-center">
+              {loading ? (
+                <GridLoader color="#25388C" size={15} />
+              ) : (
+                <IKImage
+                  path={row.getValue("universityIdCard")}
+                  urlEndpoint={config.env.imagekit.urlEndpoint}
+                  alt="University ID Card"
+                  width={500}
+                  height={300}
+                  className="object-cover"
+                  onLoad={(e) => {
+                    setLoading(false);
+                    // console.log(e);
+                  }}
+                  onLoadStart={(e) => {
+                    setLoading(true);
+                    // console.log(e);
+                  }}
+                  lqip={{ active: true }}
+                />
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
+      );
+    },
+  },
+  {
+    accessorKey: "actions",
+    header: "Actions",
+    cell: ({ row }) => {
+      interface ActionEvent extends React.MouseEvent<HTMLButtonElement> {
+        target: HTMLButtonElement;
+      }
+
+      const handleAction = async (e: ActionEvent): Promise<void> => {
+        console.log(e.target.value);
+      };
+
+      return (
+        <div className="flex gap-4 items-center">
+          <ActionDialog
+            fullName={row.original.fullName}
+            varient="green"
+            onConfirm={handleAction}
+          >
+            <Button className="bg-green-200 text-green-900 hover:bg-green-200/80 ">
+              Approve
+            </Button>
+          </ActionDialog>
+          <ActionDialog
+            fullName={row.original.fullName}
+            varient="red"
+            onConfirm={handleAction}
+          >
+            <CirclePlus width={20} height={20} className="rotate-45" />
+          </ActionDialog>
+        </div>
+      );
     },
   },
 ];

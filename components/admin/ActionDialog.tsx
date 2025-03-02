@@ -15,7 +15,7 @@ interface ActionDialogProps {
   fullName: string;
   children: React.ReactNode;
   varient: "green" | "red";
-  onConfirm: void;
+  onConfirm: (e: any) => void | Promise<void>;
 }
 
 const ActionDialog = ({
