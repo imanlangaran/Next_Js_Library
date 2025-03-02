@@ -15,7 +15,13 @@ import DDOption from "./DDOption";
 import { DropDownOptions } from "@/constants";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { Info, SquareArrowOutUpRight, Trash2 } from "lucide-react";
+import {
+  CirclePlus,
+  Eye,
+  Info,
+  SquareArrowOutUpRight,
+  Trash2,
+} from "lucide-react";
 import {
   Dialog,
   DialogClose,
@@ -29,10 +35,11 @@ import config from "@/lib/config";
 import { useState } from "react";
 import GridLoader from "react-spinners/GridLoader";
 import { changeUserRole } from "@/lib/admin/actions/user";
+import ActionDialog from "./ActionDialog";
 
 type TableMeta = {
   updateData: (user: User) => void;
-}
+};
 
 export const AllUsersColumns: ColumnDef<User>[] = [
   {
@@ -169,41 +176,12 @@ export const AllUsersColumns: ColumnDef<User>[] = [
     accessorKey: "actions",
     header: "Action",
     cell: ({ row }) => (
-      <Dialog>
-        <DialogTrigger>
-          <div className="text-red-700 flex items-center">
-            <Trash2 width={20} height={20} />
-          </div>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-sm flex flex-col items-center justify-stretch">
-          <div className="w-24 h-24 bg-red-100 rounded-full z-1 flex items-center justify-center">
-            <div className="w-3/4 h-3/4 bg-red-400 rounded-full z-2 m-auto flex items-center justify-center">
-              <Info className="w-5/12 h-5/12 text-white " />
-            </div>
-          </div>
-          <DialogTitle className="font-extrabold ">Delete User</DialogTitle>
-          <div className="font-medium text-center text-balance size">
-            Are you sure that you want to delete{" "}
-            <span className="font-bold">{row.original.fullName} </span>?
-          </div>
-          <DialogFooter className="mt-4 w-full flex flex-col justify-between items-center">
-            <div className="w-full flex justify-evenly items-center gap-4">
-              <DialogClose asChild>
-                <Button variant="secondary" size="lg" className="w-full">
-                  Cancel
-                </Button>
-              </DialogClose>
-              <Button variant="destructive" size="lg" className="w-full">
-                Delete
-              </Button>
-            </div>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ActionDialog fullName={row.original.fullName} varient="red">
+        <Trash2 width={20} height={20} />
+      </ActionDialog>
     ),
   },
 ];
-
 
 export const AccountRequestsColumns: ColumnDef<AccountRequest>[] = [
   {
@@ -220,23 +198,7 @@ export const AccountRequestsColumns: ColumnDef<AccountRequest>[] = [
     accessorKey: "joinedDate",
     header: "Joined Date",
   },
-  {
-    accessorKey: "role",
-    header: "Role",
-    cell: ({ row }) => (
-      <div
-        className={`px-3 py-2 rounded-full w-min ${
-          row.getValue("role") === "USER" ? "bg-red-200" : "bg-green-200"
-        }`}
-      >
-        {row.getValue("role")}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "borrowedBooks",
-    header: "Borrowed books",
-  },
+
   {
     accessorKey: "universityIdNo",
     header: "University ID No",
@@ -250,8 +212,8 @@ export const AccountRequestsColumns: ColumnDef<AccountRequest>[] = [
         <Dialog>
           <DialogTrigger>
             <div className="text-blue-500 hover:text-blue-700 flex items-center">
-              View ID Card{" "}
-              <SquareArrowOutUpRight width={14} height={14} className="ml-1" />
+              <Eye width={14} height={14} className="mr-1" />
+              View ID Card
             </div>
           </DialogTrigger>
           <DialogContent className="sm:max-w-md min-h-[350] flex flex-col items-center justify-stretch">
@@ -286,39 +248,18 @@ export const AccountRequestsColumns: ColumnDef<AccountRequest>[] = [
   },
   {
     accessorKey: "actions",
-    header: "Action",
+    header: "Actions",
     cell: ({ row }) => (
-      <Dialog>
-        <DialogTrigger>
-          <div className="text-red-700 flex items-center">
-            <Trash2 width={20} height={20} />
-          </div>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-sm flex flex-col items-center justify-stretch">
-          <div className="w-24 h-24 bg-red-100 rounded-full z-1 flex items-center justify-center">
-            <div className="w-3/4 h-3/4 bg-red-400 rounded-full z-2 m-auto flex items-center justify-center">
-              <Info className="w-5/12 h-5/12 text-white " />
-            </div>
-          </div>
-          <DialogTitle className="font-extrabold ">Delete User</DialogTitle>
-          <div className="font-medium text-center text-balance size">
-            Are you sure that you want to delete{" "}
-            <span className="font-bold">{row.original.fullName} </span>?
-          </div>
-          <DialogFooter className="mt-4 w-full flex flex-col justify-between items-center">
-            <div className="w-full flex justify-evenly items-center gap-4">
-              <DialogClose asChild>
-                <Button variant="secondary" size="lg" className="w-full">
-                  Cancel
-                </Button>
-              </DialogClose>
-              <Button variant="destructive" size="lg" className="w-full">
-                Delete
-              </Button>
-            </div>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <div className="flex gap-2 items-center">
+        <ActionDialog fullName={row.original.fullName} varient="green">
+          <Button className="bg-green-200 text-green-900 hover:bg-green-200/80 ">
+            Approve
+          </Button>
+        </ActionDialog>
+        <ActionDialog fullName={row.original.fullName} varient="red">
+          <CirclePlus width={20} height={20} className="rotate-45" />
+        </ActionDialog>
+      </div>
     ),
   },
 ];

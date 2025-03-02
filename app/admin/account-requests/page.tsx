@@ -1,12 +1,20 @@
-import TheTable from '@/components/admin/TheTable'
-import React from 'react'
+import { AccountRequestsColumns } from "@/components/admin/columns";
+import TheTable from "@/components/admin/TheTable";
+import { getAccountRequestData } from "@/lib/admin/actions/user";
+import React from "react";
 
-const page = () => {
+const page = async () => {
+  const AccountRequestData = await getAccountRequestData();
+
   return (
-    <section>
-      {/* <TheTable title='Account Registration Requests' data={} columns={}/> */}
+    <section className="admin-main p-7">
+      <TheTable
+        title="Account Registration Requests"
+        data={AccountRequestData}
+        columns={AccountRequestsColumns}
+      />
     </section>
-  )
-}
+  );
+};
 
-export default page
+export default page;

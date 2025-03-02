@@ -13,37 +13,37 @@ export const changeUserRole = async (params: ChangeUserRoleParams) => {
   const { userId, role } = params;
 
   try {
-    await db
-      .update(users)
-      .set({ role })
-      .where(eq(users.id, userId));
+    await db.update(users).set({ role }).where(eq(users.id, userId));
 
     // Get the updated user data
-    const updatedUser = await db.select({
-      id: users.id,
-      email: users.email,
-      fullName: users.fullName,
-      joinedDate: sql<string>`to_char(${users.createdAt}, 'Mon DD YYYY')`,
-      role: users.role,
-      borrowedBooks: sql<number>`2`,
-      universityIdNo: users.universityId,
-      universityIdCard: users.universityCard,
-    }).from(users).where(eq(users.id, userId)).limit(1);
+    const updatedUser = await db
+      .select({
+        id: users.id,
+        email: users.email,
+        fullName: users.fullName,
+        joinedDate: sql<string>`to_char(${users.createdAt}, 'Mon DD YYYY')`,
+        role: users.role,
+        borrowedBooks: sql<number>`2`,
+        universityIdNo: users.universityId,
+        universityIdCard: users.universityCard,
+      })
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
 
     return {
       success: true,
-      user: updatedUser[0]
+      user: updatedUser[0],
     };
   } catch (error) {
     console.log(error);
 
     return {
       success: false,
-      error: "An error occurred while changing the role"
+      error: "An error occurred while changing the role",
     };
   }
-}
-
+};
 
 export const getAllUsers = async () => {
   const allUsers = await db
@@ -58,7 +58,29 @@ export const getAllUsers = async () => {
       universityIdCard: users.universityCard,
     })
     .from(users)
+    .where(eq(users.status, "APPROVED"))
     .orderBy(users.createdAt);
 
   return allUsers;
+};
+
+export const getAccountRequestData = async () => {
+  const requests = await db
+    .select(
+      {
+      id: users.id,
+      email: users.email,
+      fullName: users.fullName,
+      joinedDate: sql<string>`to_char(${users.createdAt}, 'Mon DD YYYY')`,
+      universityIdNo: users.universityId,
+      universityIdCard: users.universityCard,
+    }
+  )
+    .from(users)
+    .where(eq(users.status, "PENDING"))
+    .orderBy(users.createdAt);
+
+    console.log(requests.at(0));
+
+  return requests;
 };
