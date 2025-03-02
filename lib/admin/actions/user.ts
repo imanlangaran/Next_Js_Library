@@ -80,7 +80,12 @@ export const getAccountRequestData = async () => {
     .where(eq(users.status, "PENDING"))
     .orderBy(users.createdAt);
 
-    console.log(requests.at(0));
+    // console.log(requests.at(0));
 
   return requests;
 };
+
+export const ApproveUser = async ({id}) => {
+  // await db.update(users).set({ role }).where(eq(users.id, userId));
+  await db.update(users).set({status}).where(eq(users.id, userId));
+}

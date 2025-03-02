@@ -15,12 +15,14 @@ interface ActionDialogProps {
   fullName: string;
   children: React.ReactNode;
   varient: "green" | "red";
+  onConfirm: void;
 }
 
 const ActionDialog = ({
   fullName,
   children,
   varient = "green",
+  onConfirm
 }: ActionDialogProps) => {
   return (
     <Dialog>
@@ -60,7 +62,9 @@ const ActionDialog = ({
                 Cancel
               </Button>
             </DialogClose>
-            <Button variant={varient==='green' ? 'constructive' :'destructive'} size="lg" className="w-full">
+            <Button variant={varient==='green' ? 'constructive' :'destructive'} size="lg" className="w-full"
+            onClick={onConfirm}
+            value={varient === "green" ? "Approve" : "Delete"}>
               {varient === "green" ? "Approve" : "Delete"}
             </Button>
           </div>

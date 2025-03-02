@@ -249,17 +249,25 @@ export const AccountRequestsColumns: ColumnDef<AccountRequest>[] = [
   {
     accessorKey: "actions",
     header: "Actions",
-    cell: ({ row }) => (
-      <div className="flex gap-2 items-center">
-        <ActionDialog fullName={row.original.fullName} varient="green">
+    cell: ({ row }) => {
+      const handleAction = async (e) => {
+        console.log(e.target.value)
+      }
+      
+      return (
+      <div className="flex gap-4 items-center">
+        <ActionDialog fullName={row.original.fullName} varient="green"
+        onConfirm={handleAction}>
           <Button className="bg-green-200 text-green-900 hover:bg-green-200/80 ">
             Approve
           </Button>
         </ActionDialog>
-        <ActionDialog fullName={row.original.fullName} varient="red">
+        <ActionDialog fullName={row.original.fullName} varient="red"
+        onConfirm={handleAction}>
           <CirclePlus width={20} height={20} className="rotate-45" />
         </ActionDialog>
       </div>
-    ),
+      )
+    },
   },
 ];
