@@ -12,15 +12,7 @@ const page = async () => {
       <TheTable
       title="Account Registration Requests"
       data={AccountRequestData}
-      columns={AccountRequestsColumns as ColumnDef<{
-        id: string;
-        email: string;
-        fullName: string;
-        joinedDate: string;
-        universityIdNo: number;
-        universityIdCard: string;
-      }>[]
-      }
+      columns={AccountRequestsColumns as ColumnDef<typeof AccountRequestData[0]>[]}
       />
     </section>
   );

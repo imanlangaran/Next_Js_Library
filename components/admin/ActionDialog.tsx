@@ -10,22 +10,29 @@ import {
 import { Info } from "lucide-react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
+import { GridLoader } from "react-spinners";
 
 interface ActionDialogProps {
   fullName: string;
   children: React.ReactNode;
-  varient: "green" | "red";
-  onConfirm: (e: any) => void | Promise<void>;
+  varient?: "green" | "red";
+  onConfirm: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  isLoading?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 const ActionDialog = ({
   fullName,
   children,
   varient = "green",
-  onConfirm
+  onConfirm,
+  isLoading = false,
+  open,
+  onOpenChange
 }: ActionDialogProps) => {
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger>
         <div
           className={cn(
@@ -44,7 +51,11 @@ const ActionDialog = ({
               varient === "green" ? "bg-green-500 " : "bg-red-400"
             )}
           >
-            <Info className="w-5/12 h-5/12 text-white " />
+            {isLoading ? (
+              <GridLoader color="#FFFFFF" size={8} />
+            ) : (
+              <Info className="w-5/12 h-5/12 text-white" />
+            )}
           </div>
         </div>
         <DialogTitle className="font-extrabold ">
@@ -55,17 +66,26 @@ const ActionDialog = ({
           {varient === "green" ? " approve " : " delete "}
           <span className="font-bold">{fullName} </span>?
         </div>
-        <DialogFooter className="mt-4 w-full flex flex-col justify-between items-center">
+        <DialogFooter>
           <div className="w-full flex justify-evenly items-center gap-4">
             <DialogClose asChild>
               <Button variant="secondary" size="lg" className="w-full">
                 Cancel
               </Button>
             </DialogClose>
-            <Button variant={varient==='green' ? 'constructive' :'destructive'} size="lg" className="w-full"
-            onClick={onConfirm}
-            value={varient === "green" ? "Approve" : "Delete"}>
-              {varient === "green" ? "Approve" : "Delete"}
+            <Button 
+              variant={varient==='green' ? 'constructive' :'destructive'} 
+              size="lg" 
+              className="w-full"
+              onClick={onConfirm}
+              value={varient === "green" ? "approve" : "reject"}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <GridLoader color="#FFFFFF" size={8} />
+              ) : (
+                varient === "green" ? "Approve" : "Delete"
+              )}
             </Button>
           </div>
         </DialogFooter>

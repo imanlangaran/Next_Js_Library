@@ -36,12 +36,16 @@ const TheTable = <TData extends { id: string | number }, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
     meta: {
-      updateData: (updatedRow: TData) => {
-        setData((prev) =>
-          prev.map((row) => (row.id === updatedRow.id ? updatedRow : row))
-        );
+      updateData: (updatedData: TData | TData[]) => {
+        if (Array.isArray(updatedData)) {
+          setData(updatedData);
+        } else {
+          setData((prev) =>
+            prev.map((row) => (row.id === updatedData.id ? updatedData : row))
+          );
+        }
         // Propagate changes up if needed
-        onDataChange?.(updatedRow);
+        onDataChange?.(updatedData as TData);
       },
     },
   });

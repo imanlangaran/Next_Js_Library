@@ -1,0 +1,37 @@
+[
+  {
+    "fullName": "John Smith",
+    "email": "john.smith@university.edu",
+    "universityId": 100001,
+    "password": "$2b$10$6jM7.1RcsQF2VqNpRXgvvOH6NzMgfYXOEP8j9fQFkE4XQKmL2PkCi",
+    "universityCard": "card_100001.jpg"
+  },
+  {
+    "fullName": "Emily Johnson",
+    "email": "emily.johnson@university.edu",
+    "universityId": 100002,
+    "password": "$2b$10$8kM2.1RcsQF2VqNpRXgvvOH6NzMgfYXOEP8j9fQFkE4XQKmL2PkCi",
+    "universityCard": "card_100002.jpg"
+  },
+  {
+    "fullName": "Michael Brown",
+    "email": "michael.brown@university.edu",
+    "universityId": 100003,
+    "password": "$2b$10$9nN3.1RcsQF2VqNpRXgvvOH6NzMgfYXOEP8j9fQFkE4XQKmL2PkCi",
+    "universityCard": "card_100003.jpg"
+  },
+  {
+    "fullName": "Sarah Wilson",
+    "email": "sarah.wilson@university.edu",
+    "universityId": 100004,
+    "password": "$2b$10$2pO4.1RcsQF2VqNpRXgvvOH6NzMgfYXOEP8j9fQFkE4XQKmL2PkCi",
+    "universityCard": "card_100004.jpg"
+  },
+  {
+    "fullName": "David Lee",
+    "email": "david.lee@university.edu",
+    "universityId": 100005,
+    "password": "$2b$10$4kL2.1RcsQF2VqNpRXgvvOH6NzMgfYXOEP8j9fQFkE4XQKmL2PkCi",
+    "universityCard": "card_100005.jpg"
+  }
+] 

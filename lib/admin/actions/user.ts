@@ -74,13 +74,14 @@ export const getAccountRequestData = async () => {
       joinedDate: sql<string>`to_char(${users.createdAt}, 'Mon DD YYYY')`,
       universityIdNo: users.universityId,
       universityIdCard: users.universityCard,
+      status: users.status,
+      role: users.role,
+      borrowedBooks: sql<number>`0`
     }
   )
     .from(users)
     .where(eq(users.status, "PENDING"))
     .orderBy(users.createdAt);
-
-    // console.log(requests.at(0));
 
   return requests;
 };
@@ -101,6 +102,26 @@ export const ApproveUser = async ({id}: {id: string}) => {
     return {
       success: false,
       error: "An error occurred while approving the user",
+    };
+  }
+}
+
+export const rejectUser = async ({id}: {id: string}) => {
+  try {
+    await db
+      .update(users)
+      .set({ status: "REJECTED" })
+      .where(eq(users.id, id));
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.log(error);
+    
+    return {
+      success: false,
+      error: "An error occurred while rejecting the user",
     };
   }
 }
