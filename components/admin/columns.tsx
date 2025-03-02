@@ -34,8 +34,9 @@ import { IKImage } from "imagekitio-next";
 import config from "@/lib/config";
 import { useState } from "react";
 import GridLoader from "react-spinners/GridLoader";
-import { changeUserRole } from "@/lib/admin/actions/user";
+import { ApproveUser, changeUserRole } from "@/lib/admin/actions/user";
 import ActionDialog from "./ActionDialog";
+import { toast } from "@/hooks/use-toast";
 
 type TableMeta = {
   updateData: (user: User) => void;
@@ -176,15 +177,18 @@ export const AllUsersColumns: ColumnDef<User>[] = [
     accessorKey: "actions",
     header: "Action",
     cell: ({ row }) => (
-      <ActionDialog fullName={row.original.fullName} varient="red" onConfirm={(e) => {console.log()}}>
+      <ActionDialog
+        fullName={row.original.fullName}
+        varient="red"
+        onConfirm={(e) => {
+          console.log();
+        }}
+      >
         <Trash2 width={20} height={20} />
       </ActionDialog>
     ),
   },
 ];
-
-
-
 
 export const AccountRequestsColumns: ColumnDef<AccountRequest>[] = [
   {
@@ -258,7 +262,20 @@ export const AccountRequestsColumns: ColumnDef<AccountRequest>[] = [
       }
 
       const handleAction = async (e: ActionEvent): Promise<void> => {
-        console.log(e.target.value);
+        // console.log(e.target.value);
+        try {
+          const result = await ApproveUser({id: row.original.id});
+          toast({
+            title: "Success",
+            description: "User approved successfully",
+          });
+        } catch (error) {
+          toast({
+            title: "Error",
+            description: error instanceof Error ? error.message : "Failed to approve user",
+            variant: "destructive",
+          });
+        }
       };
 
       return (
@@ -268,9 +285,12 @@ export const AccountRequestsColumns: ColumnDef<AccountRequest>[] = [
             varient="green"
             onConfirm={handleAction}
           >
-            <Button className="bg-green-200 text-green-900 hover:bg-green-200/80 ">
+            {/* <Button className="bg-green-200 text-green-900 hover:bg-green-200/80 ">
               Approve
-            </Button>
+            </Button> */}
+            <div className="h-9 px-4 py-2 text-primary-foreground shadow bg-green-200 text-green-900 hover:bg-green-200/80  inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0">
+              Approve
+            </div>
           </ActionDialog>
           <ActionDialog
             fullName={row.original.fullName}

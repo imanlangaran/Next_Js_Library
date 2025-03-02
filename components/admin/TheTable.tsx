@@ -90,9 +90,11 @@ const TheTable = <TData extends { id: string | number }, TValue>({
                 </TableRow>
               ))
             ) : (
-              <TableCell colSpan={columns.length} className="text-center h-24">
-                No results.
-              </TableCell>
+              <TableRow>
+                <TableCell colSpan={columns.length} className="text-center h-24">
+                  No results.
+                </TableCell>
+              </TableRow>
             )}
           </TableBody>
         </Table>

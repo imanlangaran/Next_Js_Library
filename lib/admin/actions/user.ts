@@ -85,7 +85,22 @@ export const getAccountRequestData = async () => {
   return requests;
 };
 
-export const ApproveUser = async ({id}) => {
-  // await db.update(users).set({ role }).where(eq(users.id, userId));
-  await db.update(users).set({status}).where(eq(users.id, userId));
+export const ApproveUser = async ({id}: {id: string}) => {
+  try {
+    await db
+      .update(users)
+      .set({ status: "APPROVED" })
+      .where(eq(users.id, id));
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.log(error);
+    
+    return {
+      success: false,
+      error: "An error occurred while approving the user",
+    };
+  }
 }
