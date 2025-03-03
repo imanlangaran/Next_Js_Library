@@ -34,22 +34,33 @@ import { IKImage } from "imagekitio-next";
 import config from "@/lib/config";
 import { useState } from "react";
 import GridLoader from "react-spinners/GridLoader";
-import { ApproveUser, changeUserRole, rejectUser, getAccountRequestData } from "@/lib/admin/actions/user";
+import {
+  ApproveUser,
+  changeUserRole,
+  rejectUser,
+  getAccountRequestData,
+} from "@/lib/admin/actions/user";
 import ActionDialog from "./ActionDialog";
 import { toast } from "@/hooks/use-toast";
+import { PropagateLoader, ScaleLoader } from "react-spinners";
 
 type TableMeta = {
-  updateData: (data: User | AccountRequest | {
-    id: string;
-    email: string;
-    fullName: string;
-    joinedDate: string;
-    universityIdNo: number;
-    universityIdCard: string;
-    status: "PENDING" | "APPROVED" | "REJECTED" | null;
-    role: "ADMIN" | "USER";
-    borrowedBooks: number;
-  }[]) => void;
+  updateData: (
+    data:
+      | User
+      | AccountRequest
+      | {
+          id: string;
+          email: string;
+          fullName: string;
+          joinedDate: string;
+          universityIdNo: number;
+          universityIdCard: string;
+          status: "PENDING" | "APPROVED" | "REJECTED" | null;
+          role: "ADMIN" | "USER";
+          borrowedBooks: number;
+        }[]
+  ) => void;
 };
 
 export const AllUsersColumns: ColumnDef<User>[] = [
@@ -73,28 +84,50 @@ export const AllUsersColumns: ColumnDef<User>[] = [
     accessorKey: "role",
     header: "Role",
     cell: ({ row, table }) => {
+      const [loading, setLoading] = useState(false);
       const handleRoleChange = async (newRole: "ADMIN" | "USER") => {
-        const result = await changeUserRole({
-          userId: row.original.id,
-          role: newRole,
-        });
+        setLoading(true);
+        try {
+          const result = await changeUserRole({
+            userId: row.original.id,
+            role: newRole,
+          });
 
-        if (result.success && result.user) {
-          // Update table data with new user info
-          (table.options.meta as TableMeta)?.updateData(result.user);
+          if (result.success && result.user) {
+            // Update table data with new user info
+            (table.options.meta as TableMeta)?.updateData(result.user);
+            toast({
+              title: "Success",
+              description: "Role changed successfully",
+            });
+            setLoading(false);
+          }
+        } catch (error) {
+          toast({
+            title: "Error",
+            description:
+              error instanceof Error ? error.message : "Failed to change role",
+            variant: "destructive",
+          });
+        } finally {
+          setLoading(false);
         }
       };
       return (
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            {/* <Button variant='secondary'>{row.getValue("role")}</Button> */}
+          <DropdownMenuTrigger asChild disabled={loading}>
             <div
-              className={`px-3 py-2 rounded-full w-min cursor-pointer ${
+              className={`px-3 py-2 rounded-full w-min cursor-pointer flex items-center justify-center ${
                 row.getValue("role") === "USER" ? "bg-red-200" : "bg-green-200"
               }`}
             >
-              {row.getValue("role")}
+              {loading ? (
+                <ScaleLoader height={10} color={row.getValue("role") === "USER" ? "#7f1d1d" : "#14532d"} />
+              ) : (
+                row.getValue("role")
+              )}
             </div>
+
             {/* <DDOption color={DropDownOptions.user_role[row.getValue('role')]} name={row.getValue('role')}/> */}
           </DropdownMenuTrigger>
           <DropdownMenuContent>
@@ -272,9 +305,11 @@ export const AccountRequestsColumns: ColumnDef<AccountRequest>[] = [
       const [approveDialogOpen, setApproveDialogOpen] = useState(false);
       const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
 
-      const handleAction = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
+      const handleAction = async (
+        e: React.MouseEvent<HTMLButtonElement>
+      ): Promise<void> => {
         const target = e.target as HTMLButtonElement;
-        const isApprove = target.value === 'approve';
+        const isApprove = target.value === "approve";
         const setLoading = isApprove ? setIsApproveLoading : setIsRejectLoading;
         const setOpen = isApprove ? setApproveDialogOpen : setRejectDialogOpen;
 
@@ -282,9 +317,9 @@ export const AccountRequestsColumns: ColumnDef<AccountRequest>[] = [
         setLoading(true);
         try {
           const result = isApprove
-            ? await ApproveUser({id: row.original.id})
-            : await rejectUser({id: row.original.id});
-            
+            ? await ApproveUser({ id: row.original.id })
+            : await rejectUser({ id: row.original.id });
+
           // Fetch fresh data and update table
           const updatedData = await getAccountRequestData();
           (table.options.meta as TableMeta)?.updateData(updatedData);
@@ -293,16 +328,17 @@ export const AccountRequestsColumns: ColumnDef<AccountRequest>[] = [
             title: "Success",
             description: isApprove
               ? "User approved successfully"
-              : "User rejected successfully"
+              : "User rejected successfully",
           });
-          
+
           setOpen(false);
         } catch (error) {
           toast({
-            title: "Error", 
-            description: error instanceof Error 
-              ? error.message 
-              : `Failed to ${target.value} user`,
+            title: "Error",
+            description:
+              error instanceof Error
+                ? error.message
+                : `Failed to ${target.value} user`,
             variant: "destructive",
           });
         } finally {
