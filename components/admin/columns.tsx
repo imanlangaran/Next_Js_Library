@@ -19,6 +19,7 @@ import {
   CirclePlus,
   Eye,
   Info,
+  PenLine,
   SquareArrowOutUpRight,
   Trash2,
 } from "lucide-react";
@@ -43,6 +44,7 @@ import {
 import ActionDialog from "./ActionDialog";
 import { toast } from "@/hooks/use-toast";
 import { PropagateLoader, ScaleLoader } from "react-spinners";
+import BookCover from "./BookCover";
 
 type TableMeta = {
   updateData: (
@@ -375,3 +377,67 @@ export const AccountRequestsColumns: ColumnDef<AccountRequest>[] = [
     },
   },
 ];
+
+export const BooksColumns: ColumnDef<Book>[] = [
+  {
+    accessorKey: "title",
+    header: "Title",
+    cell: ({ row }) => (
+      <div className="flex items-center gap-2">
+
+        <BookCover
+          coverColor={row.original.coverColor}
+          coverImage={row.original.coverUrl}
+          varient="extraSmall"
+        />
+        <p className="text-sm font-medium">{row.original.title}</p>
+      </div>
+    ),
+  },
+  {
+    accessorKey: "author",
+    header: "Author",
+  },
+  {
+    accessorKey: "genre",
+    header: "Genre",
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Created At",
+  },
+  {
+    accessorKey: "actions",
+    header: "Action",
+    cell: ({ row }) => (
+      <div className="flex gap-4">
+        {/* <ActionDialog
+          fullName={row.original.title}
+          varient="blue"
+          onConfirm={(e) => {
+            // Handle edit action
+            console.log("Edit book:", row.original.id);
+          }}
+          asChild
+        >
+            <PenLine className="h-4 w-4 cursor-pointer" />
+        </ActionDialog> */}
+        <Link href={`/admin/books/${row.original.id}`}>
+            <PenLine className="h-4 w-4 cursor-pointer" />
+        </Link>
+        <ActionDialog
+          fullName={row.original.title}
+          varient="red"
+          onConfirm={(e) => {
+            // Handle delete action
+            console.log("Delete book:", row.original.id);
+          }}
+          asChild
+        >
+            <Trash2 className="h-4 w-4 cursor-pointer" />
+        </ActionDialog>
+      </div>
+    ),
+  },
+];
+

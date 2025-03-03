@@ -21,6 +21,7 @@ interface Props<TData extends { id: string | number }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   onDataChange?: (updatedRow: TData) => void;
+  extraButtons?: React.ReactNode;
 }
 
 const TheTable = <TData extends { id: string | number }, TValue>({
@@ -28,6 +29,7 @@ const TheTable = <TData extends { id: string | number }, TValue>({
   columns,
   data: initialData,
   onDataChange,
+  extraButtons,
 }: Props<TData, TValue>) => {
   const [data, setData] = useState(initialData);
 
@@ -54,7 +56,10 @@ const TheTable = <TData extends { id: string | number }, TValue>({
     <div className="flex flex-col gap-4">
       <div className="flex justify-between items-center">
         <h2>{title}</h2>
-        <button className="btn-primary">A-Z</button>
+        <div className="flex gap-2 items-center">
+          <button className="btn-primary">A-Z</button>
+          {extraButtons}
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -77,17 +82,20 @@ const TheTable = <TData extends { id: string | number }, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  // data-state={row.getIsSelected() && "selected"}
+                // data-state={row.getIsSelected() && "selected"}
                 >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell 
-                    key={cell.id}
-                    className="whitespace-nowrap text-center w-fit">
-                      <div className="flex items-center justify-center">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                  {row.getVisibleCells().map((cell, index) => (
+                    <TableCell
+                      key={cell.id}
+                      className="whitespace-nowrap w-fit"
+                      style={{
+                        textAlign: index === 0 ? 'left' : 'center'
+                      }}>
+                      <div className={`flex items-center ${index === 0 ? 'justify-start' : 'justify-center'}`}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
                       </div>
                     </TableCell>
                   ))}

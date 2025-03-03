@@ -15,11 +15,12 @@ import { GridLoader } from "react-spinners";
 interface ActionDialogProps {
   fullName: string;
   children: React.ReactNode;
-  varient?: "green" | "red";
+  varient?: "green" | "red" | "blue";
   onConfirm: (e: React.MouseEvent<HTMLButtonElement>) => void;
   isLoading?: boolean;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  asChild?: boolean;
 }
 
 const ActionDialog = ({
@@ -29,26 +30,27 @@ const ActionDialog = ({
   onConfirm,
   isLoading = false,
   open,
-  onOpenChange
+  onOpenChange,
+  asChild
 }: ActionDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger>
+      <DialogTrigger asChild={asChild}>
         <div
           className={cn(
             "flex items-center",
-            varient === "green" ? "text-green-700 " : "text-red-700"
+            varient === "green" ? "text-green-700 " : varient === "red" ? "text-red-700" : "text-blue-700"
           )}
         >
           {children}
         </div>
       </DialogTrigger>
       <DialogContent className="sm:max-w-sm flex flex-col items-center justify-stretch">
-        <div className={cn("w-24 h-24 rounded-full z-1 flex items-center justify-center", varient === "green" ? "bg-green-200 " : "bg-red-100")}>
+        <div className={cn("w-24 h-24 rounded-full z-1 flex items-center justify-center", varient === "green" ? "bg-green-200 " : varient === "red" ? "bg-red-100" : "bg-blue-100")}>
           <div
             className={cn(
               "w-3/4 h-3/4 rounded-full z-2 m-auto flex items-center justify-center",
-              varient === "green" ? "bg-green-500 " : "bg-red-400"
+              varient === "green" ? "bg-green-500 " : varient === "red" ? "bg-red-400" : "bg-blue-400"
             )}
           >
             {isLoading ? (
