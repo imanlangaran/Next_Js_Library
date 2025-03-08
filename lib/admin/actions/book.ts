@@ -2,7 +2,7 @@
 
 import { db } from "@/database/drizzle";
 import { books } from "@/database/schema";
-import { sql } from "drizzle-orm";
+import { sql, eq } from "drizzle-orm";
 
 export const createBook = async (params: BookParams) => {
   try {
@@ -60,4 +60,21 @@ export const getAllBooks = async () => {
     createdAt: sql<string>`to_char(${books.createdAt}, 'Mon DD YYYY')`,
   }).from(books);
   return allBooks;
+}
+
+export const getBookById = async (id: string) => {
+  try {
+    const book = await db.select().from(books).where(eq(books.id, id));
+    return {
+      success: true,
+      data: book,
+    }
+  } catch (error) {
+    console.log(error);
+
+    return {
+      success: false,
+      message: "An error accurred while getting the book",
+    }
+  }
 }
