@@ -47,24 +47,33 @@ import ActionDialog from "./ActionDialog";
 import { toast } from "@/hooks/use-toast";
 import { PropagateLoader, ScaleLoader } from "react-spinners";
 import BookCover from "./BookCover";
+import { deleteBook, getAllBooks } from "@/lib/admin/actions/book";
 
-type TableMeta = {
-  updateData: (
-    data:
-      | User
-      | AccountRequest
-      | {
-        id: string;
-        email: string;
-        fullName: string;
-        joinedDate: string;
-        universityIdNo: number;
-        universityIdCard: string;
-        status: "PENDING" | "APPROVED" | "REJECTED" | null;
-        role: "ADMIN" | "USER";
-        borrowedBooks: number;
-      }[]
-  ) => void;
+type BookListData = {
+  id: string;
+  title: string;
+  author: string;
+  genre: string;
+  rating: number;
+  coverUrl: string;
+  coverColor: string;
+  createdAt: string;
+};
+
+type AccountRequestData = {
+  id: string;
+  email: string;
+  fullName: string;
+  joinedDate: string;
+  universityIdNo: number;
+  universityIdCard: string;
+  status: "PENDING" | "APPROVED" | "REJECTED" | null;
+  role: "ADMIN" | "USER";
+  borrowedBooks: number;
+};
+
+type TableMeta<T extends User | AccountRequestData | BookListData> = {
+  updateData: (data: T[]) => void;
 };
 
 export const AllUsersColumns: ColumnDef<User>[] = [
@@ -99,7 +108,7 @@ export const AllUsersColumns: ColumnDef<User>[] = [
 
           if (result.success && result.user) {
             // Update table data with new user info
-            (table.options.meta as TableMeta)?.updateData(result.user);
+            (table.options.meta as TableMeta<User>)?.updateData([result.user]);
             toast({
               title: "Success",
               description: "Role changed successfully",
@@ -237,7 +246,7 @@ export const AllUsersColumns: ColumnDef<User>[] = [
               });
               setDeleteDialogOpen(false);
               const updatedData = await getAllUsers();
-              (table.options.meta as TableMeta)?.updateData(updatedData);
+              (table.options.meta as TableMeta<User>)?.updateData(updatedData);
             }
           }}
           open={deleteDialogOpen}
@@ -263,7 +272,7 @@ export const AllUsersColumns: ColumnDef<User>[] = [
   },
 ];
 
-export const AccountRequestsColumns: ColumnDef<AccountRequest>[] = [
+export const AccountRequestsColumns: ColumnDef<AccountRequestData>[] = [
   {
     accessorKey: "email",
     header: "Name",
@@ -352,7 +361,7 @@ export const AccountRequestsColumns: ColumnDef<AccountRequest>[] = [
 
           // Fetch fresh data and update table
           const updatedData = await getAccountRequestData();
-          (table.options.meta as TableMeta)?.updateData(updatedData);
+          (table.options.meta as TableMeta<AccountRequestData>)?.updateData(updatedData);
 
           toast({
             title: "Success",
@@ -434,13 +443,12 @@ export const AccountRequestsColumns: ColumnDef<AccountRequest>[] = [
   },
 ];
 
-export const BooksColumns: ColumnDef<Book>[] = [
+export const BooksColumns: ColumnDef<BookListData>[] = [
   {
     accessorKey: "title",
     header: "Title",
     cell: ({ row }) => (
       <div className="flex items-center gap-2">
-
         <BookCover
           coverColor={row.original.coverColor}
           coverImage={row.original.coverUrl}
@@ -465,9 +473,12 @@ export const BooksColumns: ColumnDef<Book>[] = [
   {
     accessorKey: "actions",
     header: "Action",
-    cell: ({ row }) => (
-      <div className="flex gap-4">
-        {/* <ActionDialog
+    cell: ({ row, table }) => {
+      const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+      const [deleteLoading, setDeleteLoading] = useState(false);
+      return (
+        <div className="flex gap-4">
+          {/* <ActionDialog
           fullName={row.original.title}
           varient="blue"
           onConfirm={(e) => {
@@ -478,32 +489,45 @@ export const BooksColumns: ColumnDef<Book>[] = [
         >
             <PenLine className="h-4 w-4 cursor-pointer" />
         </ActionDialog> */}
-        <Link href={`/admin/books/${row.original.id}`}>
-          <PenLine className="h-4 w-4 cursor-pointer text-blue-500 hover:text-blue-700" />
-        </Link>
-        <ActionDialog
-          headingTitle="Delete Book"
-          description={
-            <>
-              Are you sure you want to delete{" "}
-              <span className="font-bold">{row.original.title}</span>?
-            </>
-          }
-          confirmButtonText="Delete"
-          iconColor1="bg-red-200"
-          iconColor2="bg-red-600"
-          textColor="text-red-700"
-          confirmButtonVarient="destructive"
-          onConfirm={(e) => {
-            // Handle delete action
-            console.log("Delete book:", row.original.id);
-          }}
-          asChild
-        >
-          <Trash2 className="h-4 w-4 cursor-pointer" />
-        </ActionDialog>
-      </div>
-    ),
+          <Link href={`/admin/books/${row.original.id}`}>
+            <PenLine className="h-4 w-4 cursor-pointer text-blue-500 hover:text-blue-700" />
+          </Link>
+          <ActionDialog
+            headingTitle="Delete Book"
+            description={
+              <>
+                Are you sure you want to delete{" "}
+                <span className="font-bold">{row.original.title}</span>?
+              </>
+            }
+            confirmButtonText="Delete"
+            iconColor1="bg-red-200"
+            iconColor2="bg-red-600"
+            textColor="text-red-700"
+            confirmButtonVarient="destructive"
+            onConfirm={async (e) => {
+              setDeleteLoading(true);
+              const result = await deleteBook({ id: row.original.id });
+              if (result.success) {
+                toast({
+                  title: "Success",
+                  description: "Book deleted successfully",
+                });
+                setDeleteDialogOpen(false);
+                const updatedData = await getAllBooks();
+                (table.options.meta as TableMeta<BookListData>)?.updateData(updatedData);
+              }
+            }}
+            asChild
+            open={deleteDialogOpen}
+            onOpenChange={setDeleteDialogOpen}
+            isLoading={deleteLoading}
+          >
+            <Trash2 className="h-4 w-4 cursor-pointer" />
+          </ActionDialog>
+        </div>
+      )
+    },
   },
 ];
 

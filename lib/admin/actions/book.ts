@@ -97,3 +97,19 @@ export const updateBook = async (params: BookParams) => {
     };
   }
 };
+
+export const deleteBook = async ({id}: {id: string}) => {
+  try {
+    await db.delete(books).where(eq(books.id, id));
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.log(error);
+
+    return {
+      success: false,
+      message: "An error accurred while deleting the book",
+    };
+  }
+}
