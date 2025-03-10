@@ -72,7 +72,22 @@ type AccountRequestData = {
   borrowedBooks: number;
 };
 
-type TableMeta<T extends User | AccountRequestData | BookListData> = {
+type BorrowRecordData = {
+  id: string;
+  userId: string;
+  bookId: string;
+  bookTitle: string | null;
+  userFullName: string | null;
+  userEmail: string | null;
+  borrowDate: string;
+  dueDate: string;
+  returnDate: string;
+  status: 'BORROWED' | 'RETURNED';
+  bookCoverColor: string | null;
+  bookCoverUrl: string | null;
+};
+
+type TableMeta<T extends User | AccountRequestData | BookListData | BorrowRecordData> = {
   updateData: (data: T[]) => void;
 };
 
@@ -528,6 +543,59 @@ export const BooksColumns: ColumnDef<BookListData>[] = [
         </div>
       )
     },
+  },
+];
+
+export const BorrowRecordsColumns: ColumnDef<BorrowRecordData>[] = [
+  {
+    accessorKey: "bookTitle",
+    header: "Book",
+    cell: ({ row }) => (
+      <div className="flex items-center gap-2">
+        <BookCover
+          coverColor={row.original.bookCoverColor || ''}
+          coverImage={row.original.bookCoverUrl || ''}
+          varient="extraSmall"
+        />
+        <p className="text-sm font-medium">{row.original.bookTitle || 'Untitled'}</p>
+      </div>
+    ),
+  },
+  {
+    accessorKey: "userName",
+    header: "User Requested",
+    cell: ({ row }) => (
+      <UserWAvatar
+        name={row.original.userFullName || 'Unknown User'}
+        email={row.original.userEmail || ''}
+      />
+    ),
+  },
+  {
+    accessorKey: "status",
+    header: "Borrow Status",
+    cell: ({ row }) => {
+      const status = row.getValue("status") as 'BORROWED' | 'RETURNED';
+      return (
+        <span className={`capitalize ${
+          status === 'RETURNED' ? 'text-green-500' : 'text-blue-500'
+        }`}>
+          {status.toLowerCase()}
+        </span>
+      );
+    },
+  },
+  {
+    accessorKey: "borrowDate",
+    header: "Borrowed Date",
+  },
+  {
+    accessorKey: "returnDate",
+    header: "Return Date",
+  },
+  {
+    accessorKey: "dueDate",
+    header: "Due Date",
   },
 ];
 
