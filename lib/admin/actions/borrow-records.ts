@@ -26,3 +26,21 @@ export const getBorrowRecords = async () => {
 
   return records;
 }
+
+export const updateBorrowRecordStatus = async ({ id, status }: { id: string, status: 'BORROWED' | 'RETURNED' }) => {
+  try {
+    await db.update(borrowRecords).set({ status }).where(eq(borrowRecords.id, id));
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.log(error);
+
+    return {
+      success: false,
+      error: "Failed to update borrow record status",
+    };
+  }
+}
+

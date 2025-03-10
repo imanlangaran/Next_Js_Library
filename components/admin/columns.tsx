@@ -48,6 +48,7 @@ import { toast } from "@/hooks/use-toast";
 import { PropagateLoader, ScaleLoader } from "react-spinners";
 import BookCover from "./BookCover";
 import { deleteBook, getAllBooks } from "@/lib/admin/actions/book";
+import { updateBorrowRecordStatus, getBorrowRecords } from "@/lib/admin/actions/borrow-records";
 
 type BookListData = {
   id: string;
@@ -493,17 +494,6 @@ export const BooksColumns: ColumnDef<BookListData>[] = [
       const [deleteLoading, setDeleteLoading] = useState(false);
       return (
         <div className="flex gap-4">
-          {/* <ActionDialog
-          fullName={row.original.title}
-          varient="blue"
-          onConfirm={(e) => {
-            // Handle edit action
-            console.log("Edit book:", row.original.id);
-          }}
-          asChild
-        >
-            <PenLine className="h-4 w-4 cursor-pointer" />
-        </ActionDialog> */}
           <Link href={`/admin/books/${row.original.id}`}>
             <PenLine className="h-4 w-4 cursor-pointer text-blue-500 hover:text-blue-700" />
           </Link>
@@ -574,14 +564,76 @@ export const BorrowRecordsColumns: ColumnDef<BorrowRecordData>[] = [
   {
     accessorKey: "status",
     header: "Borrow Status",
-    cell: ({ row }) => {
+    cell: ({ row, table }) => {
+      const [loading, setLoading] = useState(false);
       const status = row.getValue("status") as 'BORROWED' | 'RETURNED';
+      const handleStatusChange = async (newStatus: 'BORROWED' | 'RETURNED') => {
+        setLoading(true);
+        try {
+          const result = await updateBorrowRecordStatus({ id: row.original.id, status: newStatus });
+          if (result.success) {
+            toast({
+              title: "Success",
+              description: "Status updated successfully",
+            });
+            const updatedData = await getBorrowRecords();
+            (table.options.meta as TableMeta<BorrowRecordData>)?.updateData(updatedData);
+          }
+        } catch (error) {
+          toast({
+            title: "Error",
+            description: "Failed to update status",
+            variant: "destructive",
+          });
+        } finally {
+          setLoading(false);
+        }
+
+      }
       return (
-        <span className={`capitalize ${
-          status === 'RETURNED' ? 'text-green-500' : 'text-blue-500'
-        }`}>
-          {status.toLowerCase()}
-        </span>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild disabled={loading}>
+            <div
+              className={`px-3 py-2 rounded-full w-min cursor-pointer flex items-center justify-center ${status === "BORROWED" ? "bg-red-200" : "bg-green-200"
+                }`}
+            >
+              {loading ? (
+                <ScaleLoader height={10} color={status === "BORROWED" ? "#7f1d1d" : "#14532d"} />
+              ) : (
+                status
+              )}
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuRadioGroup
+              value={status}
+              onValueChange={async (value: string) => {
+                await handleStatusChange(value as 'BORROWED' | 'RETURNED');
+              }}
+            >
+              <DropdownMenuRadioItem value="BORROWED">
+                <div
+                  className={cn(
+                    "px-3 py-2 rounded-full w-min cursor-context-menu ",
+                    DropDownOptions.user_role.ADMIN
+                  )}
+                >
+                  BORROWED
+                </div>
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="RETURNED">
+                <div
+                  className={cn(
+                    "px-3 py-2 rounded-full w-min cursor-context-menu ",
+                    DropDownOptions.user_role.USER
+                  )}
+                >
+                  RETURNED
+                </div>
+              </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
       );
     },
   },
