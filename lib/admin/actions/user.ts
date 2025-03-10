@@ -56,6 +56,7 @@ export const getAllUsers = async () => {
       borrowedBooks: sql<number>`2`,
       universityIdNo: users.universityId,
       universityIdCard: users.universityCard,
+      status: users.status,
     })
     .from(users)
     .where(eq(users.status, "APPROVED"))
@@ -122,6 +123,23 @@ export const rejectUser = async ({id}: {id: string}) => {
     return {
       success: false,
       error: "An error occurred while rejecting the user",
+    };
+  }
+}
+
+export const deleteUser = async ({id}: {id: string}) => {
+  try {
+    await db.delete(users).where(eq(users.id, id));
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.log(error);
+
+    return {
+      success: false,
+      error: "An error occurred while deleting the user",
     };
   }
 }

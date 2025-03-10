@@ -13,44 +13,55 @@ import { cn } from "@/lib/utils";
 import { GridLoader } from "react-spinners";
 
 interface ActionDialogProps {
-  fullName: string;
+  headingTitle: string;
+  description: React.ReactNode;
   children: React.ReactNode;
-  varient?: "green" | "red" | "blue";
   onConfirm: (e: React.MouseEvent<HTMLButtonElement>) => void;
   isLoading?: boolean;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   asChild?: boolean;
+  confirmButtonText?: string;
+  confirmButtonVarient?: "constructive" | "destructive";
+  iconColor1?: string;
+  iconColor2?: string;
+  value?: string;
+  textColor?: string;
 }
 
 const ActionDialog = ({
-  fullName,
+  headingTitle,
+  description,
   children,
-  varient = "green",
   onConfirm,
   isLoading = false,
   open,
   onOpenChange,
-  asChild
+  asChild,
+  confirmButtonText = "Confirm",
+  confirmButtonVarient = "constructive",
+  iconColor1 = "bg-green-100",
+  iconColor2 = "bg-green-500",
+  textColor = "text-green-700",
+  value,
 }: ActionDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild={asChild}>
         <div
           className={cn(
-            "flex items-center",
-            varient === "green" ? "text-green-700 " : varient === "red" ? "text-red-700" : "text-blue-700"
+            "flex items-center",textColor
           )}
         >
           {children}
         </div>
       </DialogTrigger>
       <DialogContent className="sm:max-w-sm flex flex-col items-center justify-stretch">
-        <div className={cn("w-24 h-24 rounded-full z-1 flex items-center justify-center", varient === "green" ? "bg-green-200 " : varient === "red" ? "bg-red-100" : "bg-blue-100")}>
+        <div className={cn("w-24 h-24 rounded-full z-1 flex items-center justify-center", iconColor1)}>
           <div
             className={cn(
               "w-3/4 h-3/4 rounded-full z-2 m-auto flex items-center justify-center",
-              varient === "green" ? "bg-green-500 " : varient === "red" ? "bg-red-400" : "bg-blue-400"
+              iconColor2
             )}
           >
             {isLoading ? (
@@ -61,12 +72,10 @@ const ActionDialog = ({
           </div>
         </div>
         <DialogTitle className="font-extrabold ">
-          {varient === "green" ? "Approve User" : "Delete User"}
+          {headingTitle}
         </DialogTitle>
         <div className="font-medium text-center text-balance size">
-          Are you sure that you want to 
-          {varient === "green" ? " approve " : " delete "}
-          <span className="font-bold">{fullName} </span>?
+          {description}
         </div>
         <DialogFooter>
           <div className="w-full flex justify-evenly items-center gap-4">
@@ -75,18 +84,18 @@ const ActionDialog = ({
                 Cancel
               </Button>
             </DialogClose>
-            <Button 
-              variant={varient==='green' ? 'constructive' :'destructive'} 
-              size="lg" 
+            <Button
+              variant={confirmButtonVarient}
+              size="lg"
               className="w-full"
               onClick={onConfirm}
-              value={varient === "green" ? "approve" : "reject"}
               disabled={isLoading}
+              value={value}
             >
               {isLoading ? (
                 <GridLoader color="#FFFFFF" size={8} />
               ) : (
-                varient === "green" ? "Approve" : "Delete"
+                confirmButtonText
               )}
             </Button>
           </div>

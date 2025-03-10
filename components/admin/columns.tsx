@@ -40,6 +40,8 @@ import {
   changeUserRole,
   rejectUser,
   getAccountRequestData,
+  deleteUser,
+  getAllUsers,
 } from "@/lib/admin/actions/user";
 import ActionDialog from "./ActionDialog";
 import { toast } from "@/hooks/use-toast";
@@ -52,16 +54,16 @@ type TableMeta = {
       | User
       | AccountRequest
       | {
-          id: string;
-          email: string;
-          fullName: string;
-          joinedDate: string;
-          universityIdNo: number;
-          universityIdCard: string;
-          status: "PENDING" | "APPROVED" | "REJECTED" | null;
-          role: "ADMIN" | "USER";
-          borrowedBooks: number;
-        }[]
+        id: string;
+        email: string;
+        fullName: string;
+        joinedDate: string;
+        universityIdNo: number;
+        universityIdCard: string;
+        status: "PENDING" | "APPROVED" | "REJECTED" | null;
+        role: "ADMIN" | "USER";
+        borrowedBooks: number;
+      }[]
   ) => void;
 };
 
@@ -119,9 +121,8 @@ export const AllUsersColumns: ColumnDef<User>[] = [
         <DropdownMenu>
           <DropdownMenuTrigger asChild disabled={loading}>
             <div
-              className={`px-3 py-2 rounded-full w-min cursor-pointer flex items-center justify-center ${
-                row.getValue("role") === "USER" ? "bg-red-200" : "bg-green-200"
-              }`}
+              className={`px-3 py-2 rounded-full w-min cursor-pointer flex items-center justify-center ${row.getValue("role") === "USER" ? "bg-red-200" : "bg-green-200"
+                }`}
             >
               {loading ? (
                 <ScaleLoader height={10} color={row.getValue("role") === "USER" ? "#7f1d1d" : "#14532d"} />
@@ -221,17 +222,44 @@ export const AllUsersColumns: ColumnDef<User>[] = [
   {
     accessorKey: "actions",
     header: "Action",
-    cell: ({ row }) => (
-      <ActionDialog
-        fullName={row.original.fullName}
-        varient="red"
-        onConfirm={(e) => {
-          console.log();
-        }}
-      >
-        <Trash2 width={20} height={20} />
-      </ActionDialog>
-    ),
+    cell: ({ row, table }) => {
+      const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+      const [deleteLoading, setDeleteLoading] = useState(false);
+      return (
+        <ActionDialog
+          onConfirm={async (e) => {
+            setDeleteLoading(true);
+            const result = await deleteUser({ id: row.original.id });
+            if (result.success) {
+              toast({
+                title: "Success",
+                description: "User deleted successfully",
+              });
+              setDeleteDialogOpen(false);
+              const updatedData = await getAllUsers();
+              (table.options.meta as TableMeta)?.updateData(updatedData);
+            }
+          }}
+          open={deleteDialogOpen}
+          onOpenChange={setDeleteDialogOpen}
+          isLoading={deleteLoading}
+          headingTitle="Delete User"
+          description={
+            <>
+              Are you sure you want to delete{" "}
+              <span className="font-bold">{row.original.fullName}</span>?
+            </>
+          }
+          confirmButtonText="Delete"
+          iconColor1="bg-red-200"
+          iconColor2="bg-red-600"
+          textColor="text-red-700"
+          confirmButtonVarient="destructive"
+        >
+          <Trash2 width={20} height={20} />
+        </ActionDialog>
+      );
+    },
   },
 ];
 
@@ -351,24 +379,52 @@ export const AccountRequestsColumns: ColumnDef<AccountRequest>[] = [
       return (
         <div className="flex gap-4 items-center">
           <ActionDialog
-            fullName={row.original.fullName}
-            varient="green"
             onConfirm={handleAction}
             isLoading={isApproveLoading}
             open={approveDialogOpen}
             onOpenChange={setApproveDialogOpen}
+            headingTitle="Approve User"
+            value="approve"
+            description={
+              <>
+                Are you sure you want to approve{" "}
+                <span className="font-bold">
+                  {row.original.fullName}
+                </span>
+                ?
+              </>
+            }
+            confirmButtonText="Approve"
+            iconColor1="bg-green-200"
+            iconColor2="bg-green-500"
+            textColor="text-green-700"
+            confirmButtonVarient="constructive"
           >
             <div className="h-9 px-4 py-2 text-primary-foreground shadow bg-green-200 text-green-900 hover:bg-green-200/80  inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0">
               Approve
             </div>
           </ActionDialog>
           <ActionDialog
-            fullName={row.original.fullName}
-            varient="red"
             onConfirm={handleAction}
             isLoading={isRejectLoading}
             open={rejectDialogOpen}
             onOpenChange={setRejectDialogOpen}
+            headingTitle="Reject User"
+            description={
+              <>
+                Are you sure you want to reject{" "}
+                <span className="font-bold">
+                  {row.original.fullName}
+                </span>
+                ?
+              </>
+            }
+            confirmButtonText="Reject"
+            iconColor1="bg-red-200"
+            iconColor2="bg-red-600"
+            textColor="text-red-700"
+            confirmButtonVarient="destructive"
+            value="reject"
           >
             <CirclePlus width={20} height={20} className="rotate-45" />
           </ActionDialog>
@@ -423,18 +479,28 @@ export const BooksColumns: ColumnDef<Book>[] = [
             <PenLine className="h-4 w-4 cursor-pointer" />
         </ActionDialog> */}
         <Link href={`/admin/books/${row.original.id}`}>
-            <PenLine className="h-4 w-4 cursor-pointer" />
+          <PenLine className="h-4 w-4 cursor-pointer text-blue-500 hover:text-blue-700" />
         </Link>
         <ActionDialog
-          fullName={row.original.title}
-          varient="red"
+          headingTitle="Delete Book"
+          description={
+            <>
+              Are you sure you want to delete{" "}
+              <span className="font-bold">{row.original.title}</span>?
+            </>
+          }
+          confirmButtonText="Delete"
+          iconColor1="bg-red-200"
+          iconColor2="bg-red-600"
+          textColor="text-red-700"
+          confirmButtonVarient="destructive"
           onConfirm={(e) => {
             // Handle delete action
             console.log("Delete book:", row.original.id);
           }}
           asChild
         >
-            <Trash2 className="h-4 w-4 cursor-pointer" />
+          <Trash2 className="h-4 w-4 cursor-pointer" />
         </ActionDialog>
       </div>
     ),
