@@ -6,7 +6,10 @@ import React from "react";
 
 const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;
-  const book = await getBookById(id);
+  const { success, data, message } = await getBookById(id);
+  if (!success) {
+    return <div>{message}</div>;
+  }
   return (
     <>
       <Button asChild className="back-btn">
@@ -14,7 +17,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
       </Button>
 
       <section className="w-full max-w-2xl">
-        <BookForm type="update" {...book} />
+        <BookForm type="update" {...data} />
       </section>
     </>
   );

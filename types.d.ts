@@ -23,6 +23,7 @@ interface AuthCredentials {
 }
 
 interface BookParams {
+  id: string;
   title: string;
   author: string;
   genre: string;
