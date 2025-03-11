@@ -594,17 +594,17 @@ export const BorrowRecordsColumns: ColumnDef<BorrowRecordData>[] = [
         <DropdownMenu>
           <DropdownMenuTrigger asChild disabled={loading}>
             <div
-              className={`px-3 py-2 rounded-full w-min cursor-pointer flex items-center justify-center ${status === "BORROWED" ? "bg-red-200" : "bg-green-200"
+              className={`px-3 py-2 rounded-full w-min cursor-pointer flex items-center justify-center ${status === "BORROWED" ? "bg-purple-200 text-purple-900" : "bg-sky-200 text-sky-900"
                 }`}
             >
               {loading ? (
-                <ScaleLoader height={10} color={status === "BORROWED" ? "#7f1d1d" : "#14532d"} />
+                <ScaleLoader height={10} color={status === "BORROWED" ? "#581c87" : "#0c4a6e"} />
               ) : (
                 status
               )}
             </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
+          <DropdownMenuContent className="min-w-[10rem]">
             <DropdownMenuRadioGroup
               value={status}
               onValueChange={async (value: string) => {
@@ -615,7 +615,8 @@ export const BorrowRecordsColumns: ColumnDef<BorrowRecordData>[] = [
                 <div
                   className={cn(
                     "px-3 py-2 rounded-full w-min cursor-context-menu ",
-                    DropDownOptions.user_role.ADMIN
+                    // DropDownOptions.user_role.ADMIN
+                    "bg-purple-200 text-purple-900"
                   )}
                 >
                   BORROWED
@@ -625,7 +626,8 @@ export const BorrowRecordsColumns: ColumnDef<BorrowRecordData>[] = [
                 <div
                   className={cn(
                     "px-3 py-2 rounded-full w-min cursor-context-menu ",
-                    DropDownOptions.user_role.USER
+                    // DropDownOptions.user_role.USER
+                    "bg-sky-200 text-sky-900"
                   )}
                 >
                   RETURNED
