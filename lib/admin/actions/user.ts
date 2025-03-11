@@ -2,7 +2,7 @@
 
 import { db } from "@/database/drizzle";
 import { users } from "@/database/schema";
-import { eq, sql } from "drizzle-orm";
+import { count, eq, lte, sql } from "drizzle-orm";
 
 interface ChangeUserRoleParams {
   userId: string;
@@ -143,3 +143,18 @@ export const deleteUser = async ({id}: {id: string}) => {
     };
   }
 }
+
+export const getUserStats = async () => {
+  // Commented out database queries for now
+  const totalUsers = await db.select({ count: count() }).from(users).where(eq(users.status, "APPROVED"));
+  // const teloranceUsers = await db.select({ count: count() }).from(users).where(lte(users.createdAt, new Date()));
+
+  // send dummy data
+  const teloranceUsers = -2;
+
+  return {
+    totalUsers: totalUsers[0].count,
+    teloranceUsers
+  };
+}
+

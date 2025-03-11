@@ -2,7 +2,7 @@
 
 import { db } from "@/database/drizzle";
 import { books } from "@/database/schema";
-import { sql, eq } from "drizzle-orm";
+import { sql, eq, count } from "drizzle-orm";
 
 export const createBook = async (params: BookParams) => {
   try {
@@ -112,4 +112,15 @@ export const deleteBook = async ({id}: {id: string}) => {
       message: "An error accurred while deleting the book",
     };
   }
+}
+
+export const getBookStats = async () => {
+  const totalBooks = await db.select({ count: count() }).from(books);
+
+  // send dummy data
+  const teloranceBooks = 2;
+  return {
+    totalBooks: totalBooks[0].count,
+    teloranceBooks,
+  };
 }

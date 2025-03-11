@@ -2,7 +2,7 @@
 
 import { db } from "@/database/drizzle";
 import { books, borrowRecords, users } from "@/database/schema";
-import { eq, sql } from "drizzle-orm";
+import { count, eq, lte, sql } from "drizzle-orm";
 
 export const getBorrowRecords = async () => {
   const records = await db
@@ -42,5 +42,19 @@ export const updateBorrowRecordStatus = async ({ id, status }: { id: string, sta
       error: "Failed to update borrow record status",
     };
   }
+}
+
+export const getBorrowRequestStats = async () => {
+  // Commented out database queries for now
+  const totalBorrowRequest = await db.select({ count: count() }).from(borrowRecords).where(eq(borrowRecords.status, "BORROWED"));
+  // const teloranceBorrowRequest = await db.select({ count: count() }).from(borrowRecords).where(lte(borrowRecords.dueDate, new Date()));
+
+  // send dummy data
+  const teloranceBorrowRequest = 2;
+
+  return {
+    totalBorrowRequest: totalBorrowRequest[0].count,
+    teloranceBorrowRequest,
+  };
 }
 
