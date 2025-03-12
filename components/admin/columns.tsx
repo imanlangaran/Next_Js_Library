@@ -89,7 +89,7 @@ type BorrowRecordData = {
 };
 
 type TableMeta<T extends User | AccountRequestData | BookListData | BorrowRecordData> = {
-  updateData: (data: T[]) => void;
+  updateData: (data: T | T[]) => void;
 };
 
 export const AllUsersColumns: ColumnDef<User>[] = [
@@ -124,7 +124,7 @@ export const AllUsersColumns: ColumnDef<User>[] = [
 
           if (result.success && result.user) {
             // Update table data with new user info
-            (table.options.meta as TableMeta<User>)?.updateData([result.user]);
+            (table.options.meta as TableMeta<User>)?.updateData(result.user);
             toast({
               title: "Success",
               description: "Role changed successfully",
@@ -571,13 +571,12 @@ export const BorrowRecordsColumns: ColumnDef<BorrowRecordData>[] = [
         setLoading(true);
         try {
           const result = await updateBorrowRecordStatus({ id: row.original.id, status: newStatus });
-          if (result.success) {
+          if (result.success && result.data) {
             toast({
               title: "Success",
               description: "Status updated successfully",
             });
-            const updatedData = await getBorrowRecords();
-            (table.options.meta as TableMeta<BorrowRecordData>)?.updateData(updatedData);
+            (table.options.meta as TableMeta<BorrowRecordData>)?.updateData(result.data);
           }
         } catch (error) {
           toast({
