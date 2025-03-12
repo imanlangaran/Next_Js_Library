@@ -4,6 +4,7 @@ import { getBorrowRequestStats } from '@/lib/admin/actions/borrow-records'
 import { getUserStats } from '@/lib/admin/actions/user'
 import { getBookStats } from '@/lib/admin/actions/book'
 import OverviewCard from '@/components/admin/OverviewCard'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 const page = async () => {
 
