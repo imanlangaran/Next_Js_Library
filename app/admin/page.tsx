@@ -6,7 +6,7 @@ import { getBookStats } from '@/lib/admin/actions/book'
 import OverviewCard from '@/components/admin/OverviewCard'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { getBooks } from '@/lib/admin/actions/book'
-
+import BookOverview from '@/components/admin/BookOverview'
 const page = async () => {
 
   const { totalBorrowRequest, teloranceBorrowRequest } = await getBorrowRequestStats();
@@ -25,16 +25,14 @@ const page = async () => {
       </div>
       <div className='grid grid-cols-2 gap-4 h-full'>
         <OverviewCard title="Borrow Requests" bottonLink="/admin/borrow-records">
-        <ScrollArea>
-          {borrowRecords.map((record) => (
-            <div key={record.id}>
-              {record.id}
-            </div>
-          ))}
-        </ScrollArea>
+          <ScrollArea>
+            {borrowRecords.map((record) => (
+              <BookOverview key={record.id} {...record} />
+            ))}
+          </ScrollArea>
         </OverviewCard>
         <OverviewCard title="Account Requests" bottonLink="/admin/users" className="row-span-2">
-        <>the table</>
+          <>the table</>
         </OverviewCard>
         <OverviewCard title="Recently Added Books" bottonLink="/admin/books">
           <ScrollArea className='bg-red-500 max-h-full'>
